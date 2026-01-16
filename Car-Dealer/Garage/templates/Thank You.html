@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You - Car Dealership</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font for a modern look */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Added background image */
+            background-image: url('https://images.unsplash.com/photo-1729966085578-c7b281cf11da?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover; /* Ensures the image covers the entire body */
+            background-position: center center; /* Centers the background image */
+            background-repeat: no-repeat; /* Prevents the image from repeating */
+            background-attachment: fixed; /* Keeps the background fixed when scrolling */
+            min-height: 100vh; /* Full viewport height */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem; /* Add some padding for smaller screens */
+            /* Added a semi-transparent dark overlay for better text readability */
+            background-color: rgba(0, 0, 0, 0.6); /* Darker overlay for dark mode */
+        }
+        /* Styling for the main content box in dark mode */
+        .content-box {
+            background-color: rgba(26, 32, 44, 0.95); /* Dark, slightly transparent background for the box */
+            backdrop-filter: blur(10px); /* Stronger blur effect */
+            border-radius: 1rem; /* Rounded corners */
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6); /* Stronger, darker shadow */
+            padding: 2.5rem; /* Increased padding for better spacing */
+            max-width: 32rem; /* Max width for the content box */
+            width: 100%; /* Full width on smaller screens */
+            text-align: center;
+            transform: scale(1);
+            transition: all 0.5s ease-in-out;
+            border: 1px solid rgba(74, 85, 104, 0.4); /* Subtle border for dark mode */
+        }
+        .content-box:hover {
+            transform: scale(1.02); /* Slightly larger scale on hover */
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7); /* Enhanced shadow on hover */
+        }
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 640px) {
+            .content-box {
+                padding: 1.5rem; /* Reduce padding on small screens */
+                border-radius: 0.75rem; /* Adjust border-radius for mobile */
+            }
+            .text-4xl {
+                font-size: 2.5rem; /* Adjust title size for small screens */
+            }
+            .text-lg {
+                font-size: 1rem; /* Adjust paragraph size for small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- The main content container with background and shadow -->
+    <div class="content-box">
+        <div class="mb-6">
+            <!-- Car icon using SVG for a modern touch -->
+            <svg class="mx-auto h-20 w-20 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h10m-9 4h8a2 2 0 002-2v-2a2 2 0 00-2-2H9a2 2 0 00-2 2v2a2 2 0 002 2zm0-7V5a2 2 0 012-2h4a2 2 0 012 2v3m-4 0h.01"></path>
+            </svg>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
+            Thank You!
+        </h1>
+        <p class="text-lg md:text-xl text-gray-300 mb-8 leading-relaxed">
+            Your interest in our vehicles is greatly appreciated.
+            We've received your inquiry and a member of our sales team will be in touch with you shortly to assist you further.
+        </p>
+        <p class="text-md text-gray-400 mb-8">
+            In the meantime, feel free to browse our latest inventory:
+        </p>
+        <a href="#" class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transform transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75">
+            View Our Inventory
+        </a>
+        <div class="mt-10 text-sm text-gray-400">
+            <p>&copy; 2025 Your Car Dealership. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

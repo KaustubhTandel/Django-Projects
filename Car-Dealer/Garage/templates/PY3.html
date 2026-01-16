@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Form</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font for the entire page */
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Updated background image URL for the dark theme */
+            background-image: url('https://images.unsplash.com/photo-1729966085578-c7b281cf11da?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover; /* Cover the entire viewport */
+            background-position: center center; /* Center the background image */
+            background-repeat: no-repeat; /* Do not repeat the image */
+            background-attachment: fixed; /* Keep background fixed when scrolling */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Full viewport height */
+            padding: 1rem; /* Add some padding for smaller screens */
+            overflow: hidden; /* Prevent scrolling if content is smaller than viewport */
+            background-color: #1a202c; /* Fallback dark background color */
+        }
+        /* Ensure inputs and buttons have consistent styling */
+        input[type="text"],
+        input[type="month"],
+        input[type="password"] { /* Removed button from this selector as it has its own color */
+            border-radius: 0.5rem; /* Rounded corners */
+            padding: 0.75rem 1rem; /* Consistent padding */
+            border: 1px solid #4a5568; /* Darker border for inputs */
+            width: 100%; /* Full width */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            background-color: #2d3748; /* Darker input background */
+            color: #ffffff; /* White text color for input characters */
+        }
+        input::placeholder {
+            color: #a0aec0; /* Lighter placeholder text */
+        }
+        input:focus {
+            outline: none;
+            border-color: #667eea; /* Indigo 400 on focus */
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.5); /* Focus ring */
+        }
+        button {
+            background-color: #4f46e5; /* Indigo 600 */
+            color: white;
+            font-weight: 600; /* Semi-bold */
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            border: none; /* Remove border for buttons */
+            border-radius: 0.5rem; /* Rounded corners for button */
+            padding: 0.75rem 1rem; /* Consistent padding for button */
+            width: 100%; /* Full width for button */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        }
+        button:hover {
+            background-color: #4338ca; /* Indigo 700 on hover */
+        }
+        /* Custom class for the form container to apply dark mode styles */
+        .form-overlay {
+            background: rgba(26, 32, 44, 0.9); /* Darker, slightly transparent background for form */
+            backdrop-filter: blur(10px); /* Stronger blur effect */
+            padding: 2.5rem; /* Slightly more padding */
+            border-radius: 1rem; /* More rounded corners for the form container */
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5); /* Stronger shadow for depth */
+            border: 1px solid rgba(74, 85, 104, 0.3); /* Subtle border for the form */
+        }
+        /* Text colors for dark mode */
+        .text-title { /* Custom class for the title */
+            color: #ffffff; /* Pure white for the main title */
+        }
+        .text-label { /* Custom class for labels */
+            color: #cbd5e1; /* Lighter color for labels */
+        }
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 640px) {
+            .form-overlay { /* Targeting the main form container */
+                padding: 1.5rem; /* Reduce padding on small screens */
+                border-radius: 0.75rem; /* Adjust border-radius for mobile */
+            }
+            .text-title {
+                font-size: 2rem; /* Adjust title size for small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="w-full max-w-md form-overlay">
+        <h2 class="text-3xl font-bold mb-8 text-center text-title">Make a Payment</h2>
+
+        <form action="#" method="POST" class="space-y-6">
+            {% csrf_token %}
+            <!-- CSRF Token Placeholder (as discussed, not functional without a server-side framework) -->
+            <input type="hidden" name="csrf_token" value="YOUR_CSRF_TOKEN_HERE">
+            
+            <!-- Card Number Input -->
+            <div>
+                <label for="CARD_NUMBER" class="block text-sm font-medium mb-2 text-label">Card Number</label>
+                <input
+                    type="text"
+                    id="CARD_NUMBER"
+                    name="CARD_NUMBER"
+                    placeholder="XXXX XXXX XXXX XXXX"
+                    class="focus:ring-indigo-500 focus:border-indigo-500"
+                    required
+                    pattern="[0-9]{13,19}"
+                    title="Card number must be 13-19 digits"
+                >
+            </div>
+
+            <!-- Valid Card Date (Year/Month/Day) Input -->
+            <div>
+                <label for="VALID_CARD_DATE" class="block text-sm font-medium mb-2 text-label">Valid From (YYYY/MM/DD)</label>
+                <input
+                    type="text"
+                    id="VALID_CARD_DATE"
+                    name="VALID_CARD_DATE"
+                    class="focus:ring-indigo-500 focus:border-indigo-500"
+                    required
+                >
+            </div>
+
+            <!-- Expired Card Date (Year/Month/Day) Input -->
+            <div>
+                <label for="EXPIRED_CARD_DATE" class="block text-sm font-medium mb-2 text-label">Expires On (YYYY/MM/DD)</label>
+                <input
+                    type="text"
+                    id="EXPIRED_CARD_DATE"
+                    name="EXPIRED_CARD_DATE"
+                    class="focus:ring-indigo-500 focus:border-indigo-500"
+                    required
+                >
+            </div>
+
+            <!-- CV Number Input -->
+            <div>
+                <label for="CV_NUMBER" class="block text-sm font-medium mb-2 text-label">CVV/CVC</label>
+                <input
+                    type="password"
+                    id="CV_NUMBER"
+                    name="CV_NUMBER"
+                    placeholder="XXX"
+                    class="focus:ring-indigo-500 focus:border-indigo-500"
+                    required
+                    pattern="[0-9]{3,4}"
+                    title="CVV/CVC must be 3 or 4 digits"
+                    maxlength="4"
+                >
+            </div>
+
+            <!-- Submit Button -->
+            <div>
+                <button type="submit" class="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    Submit Payment
+                </button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!-- index.html: The Login Page -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the Inter font */
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Set background image for the body */
+            background-image: url('https://images.unsplash.com/photo-1729966085578-c7b281cf11da?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover; /* Cover the entire background */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Do not repeat the image */
+            background-attachment: fixed; /* Keep background fixed when scrolling */
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="bg-gray-900 p-8 rounded-lg shadow-2xl w-full max-w-md bg-opacity-90">
+        <h2 class="text-3xl font-bold text-center text-white mb-8">Login</h2>
+        <form id="loginForm" class="space-y-6" method="POST">
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-300 mb-1">Username</label>
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    class="mt-1 block w-full px-4 py-2 border border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-gray-700 text-white placeholder-gray-400"
+                    placeholder="Enter your username"
+                    required
+                >
+            </div>
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-300 mb-1">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    class="mt-1 block w-full px-4 py-2 border border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-gray-700 text-white placeholder-gray-400"
+                    placeholder="Enter your password"
+                    required
+                >
+            </div>
+            <div id="messageBox" class="text-center text-sm text-red-400 hidden"></div>
+            <button
+                type="submit"
+                class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300 ease-in-out transform hover:scale-105"
+            >
+                Log In
+            </button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const messageBox = document.getElementById('messageBox');
+
+            // Simple validation (for demonstration purposes)
+            if (username === 'user' && password === 'password') {
+                // Redirect to home.html on successful login
+                window.location.href = 'home.html';
+            } else {
+                // Display error message
+                messageBox.textContent = 'Invalid username or password.';
+                messageBox.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
+
+<!-- home.html: The Home Page -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the Inter font */
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Set background image for the body */
+            background-image: url('https://images.unsplash.com/photo-1729966085578-c7b281cf11da?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover; /* Cover the entire background */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Do not repeat the image */
+            background-attachment: fixed; /* Keep background fixed when scrolling */
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+    <div class="bg-gray-900 p-8 rounded-lg shadow-2xl w-full max-w-2xl text-center bg-opacity-90">
+        <h1 class="text-4xl font-extrabold text-white mb-6">Welcome to the Home Page!</h1>
+        <p class="text-lg text-gray-300 mb-8">You have successfully logged in.</p>
+        <!-- Image from the provided URL -->
+        <img
+            src="https://images.unsplash.com/photo-1729966085578-c7b281cf11da?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            alt="Welcome Image"
+            class="w-full max-w-md mx-auto rounded-lg shadow-md mb-8"
+            onerror="this.onerror=null; this.src='https://placehold.co/600x400/333333/cccccc?text=Image+Not+Found';"
+        >
+        <button
+            onclick="window.location.href='index.html';"
+            class="py-3 px-6 bg-red-600 text-white font-semibold rounded-md shadow-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-300 ease-in-out transform hover:scale-105"
+        >
+            Logout
+        </button>
+    </div>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Collection Form</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font for the entire page */
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Background image remains the same */
+            background-image: url('https://images.unsplash.com/photo-1729966085578-c7b281cf11da?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); 
+            background-size: cover; /* Ensures the image covers the entire background */
+            background-position: center center; /* Centers the image */
+            background-repeat: no-repeat; /* Prevents the image from repeating */
+            background-attachment: fixed; /* Keeps the image fixed when scrolling */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Full viewport height */
+            padding: 1rem; /* Add some padding for smaller screens */
+        }
+
+        /* Ensure inputs, select, textarea and buttons have consistent styling */
+        input[type="text"],
+        input[type="tel"],
+        input[type="number"],
+        input[type="email"],
+        select,
+        textarea {
+            border-radius: 0.5rem; /* Rounded corners */
+            padding: 0.75rem 1rem; /* Consistent padding */
+            border: 1px solid #475569; /* Darker gray border for dark theme */
+            width: 100%; /* Full width */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            transition: all 0.3s ease-in-out; /* Smooth transition for focus and hover effects */
+            background-color: #1e293b; /* Dark background for inputs */
+            color: #f8fafc; /* Light text color for inputs */
+        }
+        input::placeholder,
+        textarea::placeholder {
+            color: #94a3b8; /* Lighter placeholder text */
+        }
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #6366f1; /* Indigo focus border */
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5); /* Indigo glow on focus */
+        }
+        button {
+            background-color: #4f46e5; /* Indigo 600 */
+            color: white;
+            font-weight: 600; /* Semi-bold */
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out; /* Smooth transition for hover and click */
+        }
+        button:hover {
+            background-color: #4338ca; /* Indigo 700 on hover */
+            transform: translateY(-2px); /* Slight lift effect */
+        }
+        button:active {
+            transform: translateY(0); /* Return to original position on click */
+        }
+
+        /* Message box styling */
+        .message-box {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 500;
+            opacity: 0; /* Initially hidden */
+            transform: translateY(10px); /* Start slightly below */
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+        }
+        .message-box.show {
+            opacity: 1; /* Show when active */
+            transform: translateY(0);
+        }
+        .message-box.success {
+            background-color: #166534; /* Darker green for success */
+            color: #d1fae5; /* Lighter green text */
+            border: 1px solid #22c55e; /* Green border */
+        }
+        .message-box.error {
+            background-color: #991b1b; /* Darker red for error */
+            color: #fee2e2; /* Lighter red text */
+            border: 1px solid #ef4444; /* Red border */
+        }
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3); /* Lighter spinner border */
+            border-top: 4px solid #ffffff; /* White spinner top */
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Form entry animation */
+        .form-field-animation {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideIn 0.5s forwards;
+        }
+
+        /* Delay for each field */
+        .form-field-animation:nth-child(1) { animation-delay: 0.1s; }
+        .form-field-animation:nth-child(2) { animation-delay: 0.2s; }
+        .form-field-animation:nth-child(3) { animation-delay: 0.3s; }
+        .form-field-animation:nth-child(4) { animation-delay: 0.4s; } /* For the submit button div */
+
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Form container entrance animation */
+        .form-container-animation {
+            opacity: 0;
+            transform: scale(0.95);
+            animation: fadeInScale 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeInScale {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gray-900 p-8 rounded-lg shadow-xl w-full max-w-md form-container-animation">
+        <h2 class="text-3xl font-bold text-white mb-8 text-center">Car Collection</h2>
+
+        <form id="carCollectionForm" action="#" method="POST" class="space-y-6">
+            {% csrf_token %}
+            <!-- CSRF token placeholder, typically handled by backend frameworks -->
+            <!-- {% csrf_token %} --> 
+            <!-- Car Name Input -->
+            <div class="form-field-animation">
+                <label for="CAR_NAME" class="block text-sm font-medium text-gray-200 mb-2">Car Name</label>
+                <input
+                    type="text"
+                    id="CAR_NAME"
+                    name="CAR_NAME"
+                    placeholder="e.g., Toyota Camry"
+                    class="focus:ring-indigo-500 focus:border-indigo-500"
+                    required
+                >
+            </div>
+
+            <!-- Model Name Input -->
+            <div class="form-field-animation">
+                <label for="MODEL_NAME" class="block text-sm font-medium text-gray-200 mb-2">Model Name</label>
+                <input
+                    type="text"
+                    id="MODEL_NAME"
+                    name="MODEL_NAME"
+                    placeholder="e.g., SE"
+                    class="focus:ring-indigo-500 focus:border-indigo-500"
+                    required
+                >
+            </div>
+
+            <!-- Car Colour Input -->
+            <div class="form-field-animation">
+                <label for="CAR_COLOUR" class="block text-sm font-medium text-gray-200 mb-2">Car Colour</label>
+                <input
+                    type="text"
+                    id="CAR_COLOUR"
+                    name="CAR_COLOUR"
+                    placeholder="e.g., Red"
+                    class="focus:ring-indigo-500 focus:border-indigo-500"
+                    required
+                >
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-field-animation">
+                <button type="submit" id="submitButton" class="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    Add Car to Collection
+                </button>
+            </div>
+
+            <!-- Message Box for feedback -->
+            <div id="messageBox" class="message-box"></div>
+        </form>
+    </div>
+
+    {% comment %} <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('carCollectionForm');
+            const submitButton = document.getElementById('submitButton');
+            const messageBox = document.getElementById('messageBox');
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault(); // Prevent default form submission
+
+                // Clear previous messages and hide message box
+                messageBox.textContent = '';
+                messageBox.classList.remove('show', 'success', 'error'); // Remove show class
+
+                // Show loading state
+                submitButton.innerHTML = '<div class="loading-spinner"></div>';
+                submitButton.disabled = true;
+
+                const formData = new FormData(form);
+                const data = {};
+                for (let [key, value] of formData.entries()) {
+                    data[key] = value;
+                }
+
+                // Simulate an API call
+                try {
+                    // In a real application, you would use fetch() here:
+                    // const response = await fetch(form.action, {
+                    //    method: 'POST',
+                    //    headers: {
+                    //        'Content-Type': 'application/json',
+                    //        // Add CSRF token if using Django or similar framework
+                    //    },
+                    //    body: JSON.stringify(data)
+                    // });
+                    // const result = await response.json();
+
+                    // For this example, we simulate a 2-second delay
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+
+                    // Simulate success or failure
+                    const success = Math.random() > 0.1; // 90% chance of success for demonstration
+
+                    if (success) {
+                        messageBox.textContent = 'Car added to collection successfully!';
+                        messageBox.classList.add('success');
+                        form.reset(); // Clear form fields on success
+                    } else {
+                        throw new Error('Failed to add car to collection. Please try again.');
+                    }
+
+                } catch (error) {
+                    messageBox.textContent = `Error: ${error.message}`;
+                    messageBox.classList.add('error');
+                    console.error('Submission error:', error);
+                } finally {
+                    // Restore button state
+                    submitButton.innerHTML = 'Add Car to Collection';
+                    submitButton.disabled = false;
+                    messageBox.classList.add('show'); // Show message box with animation
+                }
+            });
+        });
+    </script> {% endcomment %}
+</body>
+</html>

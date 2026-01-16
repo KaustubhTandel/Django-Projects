@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Information Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global Firebase variables
+        let app;
+        let db;
+        let auth;
+        let userId = 'anonymous'; // Default to anonymous
+
+        // Initialize Firebase and authenticate
+        const initFirebase = async () => {
+            try {
+                const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                // Sign in with custom token if available, otherwise anonymously
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                // Listen for auth state changes to get the user ID
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        console.log("Firebase User ID:", userId);
+                        document.getElementById('userIdDisplay').textContent = `User ID: ${userId}`;
+                    } else {
+                        console.log("No user signed in.");
+                        userId = 'anonymous'; // Fallback if somehow signed out
+                        document.getElementById('userIdDisplay').textContent = `User ID: ${userId} (Anonymous)`;
+                    }
+                });
+            } catch (error) {
+                console.error("Error initializing Firebase:", error);
+                // Display error to user if Firebase initialization fails
+                const messageBox = document.getElementById('messageBox');
+                messageBox.textContent = `Error initializing Firebase: ${error.message}`;
+                messageBox.classList.add('show', 'error');
+            }
+        };
+
+        // Make Firebase instances available globally for the form script
+        window.firebaseApp = app;
+        window.firebaseDb = db;
+        window.firebaseAuth = auth;
+        window.getFirebaseUserId = () => userId;
+        window.addDoc = addDoc;
+        window.collection = collection;
+        window.initFirebase = initFirebase; // Expose init function
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Updated background image URL */
+            background-image: url('https://images.unsplash.com/photo-1729966085578-c7b281cf11da?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); 
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            overflow: hidden; /* Prevent scrolling */
+        }
+
+        /* Main content overlay */
+        .content-overlay {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        /* Premium form container */
+        .form-container {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 24px;
+            box-shadow: 
+                0 32px 64px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(148, 163, 184, 0.1) inset;
+            padding: 3rem;
+            max-width: 480px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.3), transparent);
+        }
+
+        /* Premium typography */
+        .form-title {
+            color: #f8fafc;
+            font-weight: 700;
+            font-size: 2rem;
+            letter-spacing: -0.025em;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .form-subtitle {
+            color: #cbd5e1;
+            font-weight: 400;
+            font-size: 0.875rem;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            opacity: 0.8;
+        }
+
+        /* Input field styling */
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-label {
+            display: block;
+            color: #e2e8f0;
+            font-weight: 500;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.025em;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 12px;
+            color: #f8fafc;
+            font-size: 0.875rem;
+            font-weight: 400;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .input-field::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: rgba(30, 41, 59, 0.9);
+            box-shadow: 
+                0 0 0 3px rgba(59, 130, 246, 0.1),
+                0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-field:hover {
+            border-color: rgba(148, 163, 184, 0.3);
+        }
+
+        /* Select field styling */
+        select.input-field {
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.75rem center;
+            background-repeat: no-repeat;
+            background-size: 1.25rem 1.25rem;
+            padding-right: 2.5rem;
+            appearance: none;
+        }
+
+        /* Textarea specific styling */
+        textarea.input-field {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        /* Premium button styling */
+        .submit-button {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            border: none;
+            border-radius: 12px;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 0.875rem;
+            letter-spacing: 0.025em;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+        }
+
+        .submit-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .submit-button:hover::before {
+            left: 100%;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .submit-button:active {
+            transform: translateY(0);
+        }
+
+        .submit-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Message box styling */
+        .message-box {
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            margin-top: 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .message-box.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .message-box.success {
+            background: rgba(34, 197, 94, 0.15);
+            color: #bbf7d0;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        .message-box.error {
+            background: rgba(239, 68, 68, 0.15);
+            color: #fecaca;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        /* Loading spinner */
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Form animations */
+        .form-field-animation {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .form-field-animation:nth-child(1) { animation-delay: 0.1s; }
+        .form-field-animation:nth-child(2) { animation-delay: 0.15s; }
+        .form-field-animation:nth-child(3) { animation-delay: 0.2s; }
+        .form-field-animation:nth-child(4) { animation-delay: 0.25s; }
+        .form-field-animation:nth-child(5) { animation-delay: 0.3s; }
+        .form-field-animation:nth-child(6) { animation-delay: 0.35s; }
+        .form-field-animation:nth-child(7) { animation-delay: 0.4s; }
+        .form-field-animation:nth-child(8) { animation-delay: 0.45s; }
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Container entrance animation */
+        .form-container-animation {
+            opacity: 0;
+            transform: scale(0.95) translateY(20px);
+            animation: fadeInScale 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes fadeInScale {
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Security badge */
+        .security-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            padding: 0.75rem;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 8px;
+            color: #bbf7d0;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        /* User ID Display */
+        #userIdDisplay {
+            color: #94a3b8;
+            font-size: 0.75rem;
+            text-align: center;
+            margin-top: 1rem;
+            word-break: break-all; /* Ensures long IDs wrap */
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 640px) {
+            .content-overlay {
+                padding: 1rem;
+            }
+            
+            .form-container {
+                padding: 2rem;
+            }
+            
+            .form-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="content-overlay">
+        <div class="form-container form-container-animation">
+            <h1 class="form-title">Executive Registration</h1>
+            <p class="form-subtitle">Secure information collection portal</p>
+
+            <form id="personalInfoForm" action="#" method="POST">
+                {% csrf_token %}
+                <div class="input-group form-field-animation">
+                    <label for="NAME" class="input-label">Full Name *</label>
+                    <input
+                        type="text"
+                        id="NAME"
+                        name="NAME"
+                        class="input-field"
+                        placeholder="Enter your full name"
+                        required
+                    >
+                </div>
+
+                <div class="input-group form-field-animation">
+                    <label for="CONTACT" class="input-label">Contact Number *</label>
+                    <input
+                        type="tel"
+                        id="CONTACT"
+                        name="CONTACT"
+                        class="input-field"
+                        placeholder="+1 (555) 123-4567"
+                        pattern="[0-9+\-\s\(\)]{10,20}"
+                        title="Please enter a valid phone number"
+                        required
+                    >
+                </div>
+
+                <div class="input-group form-field-animation">
+                    <label for="AGE" class="input-label">Age *</label>
+                    <input
+                        type="number"
+                        id="AGE"
+                        name="AGE"
+                        class="input-field"
+                        placeholder="Enter your age"
+                        min="18"
+                        max="120"
+                        required
+                    >
+                </div>
+
+                <div class="input-group form-field-animation">
+                    <label for="GENDER" class="input-label">Gender *</label>
+                    <select
+                        id="GENDER"
+                        name="GENDER"
+                        class="input-field"
+                        required
+                    >
+                        <option value="">Select gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                        <option value="Prefer not to say">Prefer not to say</option>
+                    </select>
+                </div>
+
+                <div class="input-group form-field-animation">
+                    <label for="EMAIL" class="input-label">Email Address *</label>
+                    <input
+                        type="email"
+                        id="EMAIL"
+                        name="EMAIL"
+                        class="input-field"
+                        placeholder="your.email@company.com"
+                        required
+                    >
+                </div>
+
+                <div class="input-group form-field-animation">
+                    <label for="ADDRESS" class="input-label">Business Address *</label>
+                    <textarea
+                        id="ADDRESS"
+                        name="ADDRESS"
+                        class="input-field"
+                        placeholder="Enter your complete business address"
+                        rows="3"
+                        required
+                    ></textarea>
+                </div>
+
+                <div class="form-field-animation">
+                    <button type="submit" id="submitButton" class="submit-button">
+                        Submit Information
+                    </button>
+                </div>
+
+                <div class="security-badge form-field-animation">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>SSL Encrypted • Privacy Protected</span>
+                </div>
+
+                <div id="messageBox" class="message-box"></div>
+            </form>
+            <div id="userIdDisplay"></div>
+        </div>
+    </div>
+
+    {% comment %} <script>
+        // Enhanced form handling
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Initialize Firebase first
+            await window.initFirebase();
+
+            const form = document.getElementById('personalInfoForm');
+            const submitButton = document.getElementById('submitButton');
+            const messageBox = document.getElementById('messageBox');
+
+            // Form validation
+            const validateForm = (formData) => {
+                const requiredFields = ['NAME', 'CONTACT', 'AGE', 'GENDER', 'EMAIL', 'ADDRESS'];
+                for (const field of requiredFields) {
+                    if (!formData.get(field) || formData.get(field).trim() === '') {
+                        throw new Error(`${field.replace('_', ' ').toLowerCase()} is required`);
+                    }
+                }
+
+                // Email validation
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(formData.get('EMAIL'))) {
+                    throw new Error('Please enter a valid email address');
+                }
+
+                // Phone validation
+                const phoneRegex = /[0-9+\-\s\(\)]{10,20}/;
+                if (!phoneRegex.test(formData.get('CONTACT'))) {
+                    throw new Error('Please enter a valid phone number');
+                }
+
+                // Age validation
+                const age = parseInt(formData.get('AGE'));
+                if (isNaN(age) || age < 18 || age > 120) {
+                    throw new Error('Age must be a number between 18 and 120');
+                }
+            };
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                // Clear previous messages
+                messageBox.textContent = '';
+                messageBox.classList.remove('show', 'success', 'error');
+
+                // Show loading state
+                submitButton.innerHTML = '<div class="loading-spinner"></div>';
+                submitButton.disabled = true;
+
+                try {
+                    const formData = new FormData(form);
+                    
+                    // Validate form
+                    validateForm(formData);
+
+                    // Get user ID and app ID
+                    const currentUserId = window.getFirebaseUserId();
+                    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+                    // Prepare data for Firestore
+                    const dataToSave = {
+                        name: formData.get('NAME'),
+                        contact: formData.get('CONTACT'),
+                        age: parseInt(formData.get('AGE')),
+                        gender: formData.get('GENDER'),
+                        email: formData.get('EMAIL'),
+                        address: formData.get('ADDRESS'),
+                        timestamp: new Date()
+                    };
+
+                    // Add data to Firestore
+                    // Collection path: /artifacts/{appId}/users/{userId}/executive_info
+                    const docRef = await window.addDoc(window.collection(window.firebaseDb, `artifacts/${appId}/users/${currentUserId}/executive_info`), dataToSave);
+
+                    messageBox.textContent = `Information submitted successfully! Document ID: ${docRef.id}`;
+                    messageBox.classList.add('show', 'success');
+                    form.reset(); // Clear form on success
+
+                } catch (error) {
+                    console.error("Submission error:", error);
+                    messageBox.textContent = `Error: ${error.message}`;
+                    messageBox.classList.add('show', 'error');
+                } finally {
+                    submitButton.innerHTML = 'Submit Information';
+                    submitButton.disabled = false;
+                }
+            });
+        });
+    </script> {% endcomment %}
+</body>
+</html>
