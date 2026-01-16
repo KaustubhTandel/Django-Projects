@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You!</title>
+    <!-- Tailwind CSS for modern and responsive styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Poppins (for headings) and Lato (for body text) -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for the standalone Thank You page */
+        body {
+            font-family: 'Lato', sans-serif; /* Using Lato for body text for readability */
+            background: linear-gradient(135deg, #eaf2f8 0%, #dbe8f0 100%); /* Lighter, more serene gradient background */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2.5rem; /* Increased padding around the body */
+            overflow: hidden; /* Prevent scrollbar from background effects */
+        }
+        /* Subtle background pattern for added sophistication */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 15% 85%, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 70%),
+                        radial-gradient(circle at 85% 15%, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 70%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 800px; /* Wider container for a more grand feel */
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 28px; /* Even more rounded for a softer, modern look */
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15); /* Deeper, more diffused shadow for floating effect */
+            overflow: hidden;
+            animation: fadeInSlideDown 0.9s ease-out forwards; /* Smoother entry animation */
+            text-align: center; /* Center content within the container */
+        }
+
+        /* Keyframe for fade-in and slide-down effect */
+        @keyframes fadeInSlideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Thank You Section Styling (adapted to be the main content) */
+        .thank-you-content {
+            padding: 5rem 3rem; /* Increased padding for spacious feel */
+            animation: fadeInSlideUp 1s ease-out forwards; /* Smoother, longer animation */
+        }
+        @keyframes fadeInSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .thank-you-content svg {
+            color: #2f855a; /* Deep green for checkmark */
+            height: 7rem; /* Even larger icon */
+            width: 7rem;
+            margin: 0 auto 2.8rem auto; /* Center SVG and add bottom margin */
+            animation: popIn 1s cubic-bezier(.17,.89,.32,1.49) forwards; /* More playful pop animation */
+        }
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            80% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        .thank-you-content h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3.5rem; /* Larger, more impactful thank you heading */
+            font-weight: 700;
+            color: #215c3d; /* Darker, richer green */
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.03em;
+        }
+        .thank-you-content p {
+            font-family: 'Lato', sans-serif;
+            font-size: 1.35rem; /* Slightly larger paragraph text */
+            color: #586980; /* Softer gray for text */
+            margin-bottom: 2.5rem;
+            line-height: 1.8; /* Increased line height for readability */
+        }
+        .back-button {
+            background: linear-gradient(90deg, #2c5282, #4a78c9); /* Professional blue gradient */
+            color: white;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            padding: 1rem 3rem;
+            border-radius: 40px; /* Softer pill shape */
+            font-size: 1.15rem;
+            box-shadow: 0 6px 18px rgba(44, 82, 130, 0.4);
+            transition: all 0.3s ease;
+            outline: none;
+            border: none;
+            display: inline-block; /* Make it behave like a button */
+            text-decoration: none; /* Remove underline for links */
+        }
+        .back-button:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 10px 22px rgba(44, 82, 130, 0.6);
+            background: linear-gradient(90deg, #24436b, #3d64a7); /* Slightly darker on hover */
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="container">
+        <!-- Thank You Message Content -->
+        <div class="thank-you-content">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <h2>Thank You!</h2>
+            <p>Your action has been successfully completed.</p>
+            <p>We truly appreciate your valuable time and participation.</p>
+            <form method="POST">
+                {% csrf_token %}
+            <button type="submit" class="back-button">Return to Home Page</button>
+            <!-- You can change "#" to your actual home page URL, e.g., "index.html" or "/" -->
+        </div>
+    </div>
+</body>
+</html>

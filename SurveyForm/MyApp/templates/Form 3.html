@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Address Details Survey</title>
+    <!-- Tailwind CSS for modern and responsive styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Poppins (for headings) and Lato (for body text) -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles to enhance Tailwind defaults or add specific flair */
+        body {
+            font-family: 'Lato', sans-serif; /* Using Lato for body text for readability */
+            background: linear-gradient(135deg, #eaf2f8 0%, #dbe8f0 100%); /* Lighter, more serene gradient background */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2.5rem; /* Increased padding around the body */
+            overflow: hidden; /* Prevent scrollbar from background effects */
+        }
+        /* Subtle background pattern for added sophistication */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 15% 85%, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 70%),
+                        radial-gradient(circle at 85% 15%, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 70%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 800px; /* Wider container for a more grand feel */
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 28px; /* Even more rounded for a softer, modern look */
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15); /* Deeper, more diffused shadow for floating effect */
+            overflow: hidden;
+            animation: fadeInSlideDown 0.9s ease-out forwards; /* Smoother entry animation */
+        }
+
+        /* Keyframe for fade-in and slide-down effect */
+        @keyframes fadeInSlideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-header {
+            background: linear-gradient(90deg, #2c5282, #4a78c9); /* Deep, professional blue gradient */
+            color: white;
+            padding: 3.5rem 3rem; /* Even more generous padding */
+            border-top-left-radius: 28px;
+            border-top-right-radius: 28px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 -5px 10px rgba(0,0,0,0.1); /* Inner shadow for depth */
+        }
+        .form-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="10"/></svg>');
+            background-size: 50px 50px; /* Subtle pattern */
+            opacity: 0.2;
+            z-index: 0;
+            animation: moveBackground 60s linear infinite; /* Slow, subtle movement */
+        }
+        @keyframes moveBackground {
+            from { background-position: 0 0; }
+            to { background-position: 100% 100%; }
+        }
+        .form-header h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3.2rem; /* Larger and more impactful heading */
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            text-shadow: 2px 3px 6px rgba(0,0,0,0.3); /* Stronger, defined text shadow */
+            position: relative;
+            z-index: 1;
+            letter-spacing: 0.02em; /* Slightly more relaxed letter spacing */
+        }
+        .form-header p {
+            font-family: 'Lato', sans-serif;
+            font-size: 1.3rem; /* Slightly larger subheading */
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+            line-height: 1.5;
+        }
+
+        .form-body {
+            padding: 3.5rem 3rem; /* Consistent generous padding */
+        }
+
+        .form-group {
+            margin-bottom: 1.8rem; /* More vertical space between form groups */
+        }
+        .form-group:last-of-type {
+            margin-bottom: 0; /* No bottom margin for the last group before button */
+        }
+
+        .form-group label {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            color: #3b4a62; /* Deeper, more sophisticated gray for labels */
+            margin-bottom: 0.7rem; /* Slightly more space below labels */
+            display: block;
+            font-size: 1rem; /* Clearer label font size */
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="email"],
+        input[type="tel"],
+        select {
+            border: 1px solid #d4dbe8; /* Softer border color */
+            padding: 1.2rem 1.5rem; /* More refined padding in inputs */
+            border-radius: 14px; /* Nicely rounded input fields */
+            width: 100%;
+            font-size: 1.1rem; /* Slightly larger input text */
+            color: #2a3547; /* Darker, professional text in inputs */
+            background-color: #fcfdff; /* Very light background for inputs */
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); /* Subtle inner shadow */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+        }
+        input[type="text"]::placeholder,
+        input[type="number"]::placeholder,
+        input[type="email"]::placeholder,
+        input[type="tel"]::placeholder {
+            color: #92a0b8; /* Professional placeholder color */
+            opacity: 1; /* Ensures consistency across browsers */
+        }
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #4a90e2; /* Clear blue on focus */
+            background-color: #ffffff; /* Ensure white background on focus */
+            box-shadow: 0 0 0 6px rgba(74, 144, 226, 0.25); /* More prominent, soft glow */
+        }
+
+        button[type="submit"] {
+            background: linear-gradient(90deg, #2f855a, #48bb78); /* Deep, vibrant green gradient for submit */
+            color: white;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            padding: 1.2rem 3.5rem; /* More generous button padding */
+            border-radius: 50px;
+            font-size: 1.2rem;
+            letter-spacing: 0.1em; /* More impactful letter spacing */
+            box-shadow: 0 10px 25px rgba(47, 133, 90, 0.4); /* Stronger, softer green shadow */
+            transition: all 0.3s cubic-bezier(.25,.8,.25,1); /* Professional cubic-bezier transition */
+            outline: none;
+            border: none; /* Ensure no default border */
+        }
+        button[type="submit"]:hover {
+            transform: translateY(-6px) scale(1.04); /* More pronounced lift and scale */
+            box-shadow: 0 15px 35px rgba(47, 133, 90, 0.6); /* Even stronger shadow on hover */
+            background: linear-gradient(90deg, #276b4a, #3da168); /* Slightly darker gradient on hover */
+        }
+        button[type="submit"]:active {
+            transform: translateY(-3px); /* Slight press effect */
+            box-shadow: 0 5px 12px rgba(47, 133, 90, 0.3);
+        }
+
+        /* Thank You Section Styling */
+        #thankYouMessageSection {
+            background-color: #ffffff;
+            padding: 5rem 3rem; /* Increased padding */
+            border-bottom-left-radius: 28px;
+            border-bottom-right-radius: 28px;
+            animation: fadeInSlideUp 1s ease-out forwards; /* Smoother, longer animation */
+        }
+        @keyframes fadeInSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #thankYouMessageSection svg {
+            color: #2f855a; /* Deep green for checkmark */
+            height: 7rem; /* Even larger icon */
+            width: 7rem;
+            margin-bottom: 2.8rem;
+            animation: popIn 1s cubic-bezier(.17,.89,.32,1.49) forwards; /* More playful pop animation */
+        }
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            80% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        #thankYouMessageSection h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3.5rem; /* Larger, more impactful thank you heading */
+            font-weight: 700;
+            color: #215c3d; /* Darker, richer green */
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.03em;
+        }
+        #thankYouMessageSection p {
+            font-family: 'Lato', sans-serif;
+            font-size: 1.35rem; /* Slightly larger paragraph text */
+            color: #586980; /* Softer gray for text */
+            margin-bottom: 2.5rem;
+            line-height: 1.8; /* Increased line height for readability */
+        }
+        #resetFormButton {
+            background: linear-gradient(90deg, #2c5282, #4a78c9); /* Match header blue gradient */
+            color: white;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            padding: 1rem 3rem;
+            border-radius: 40px; /* Softer pill shape */
+            font-size: 1.15rem;
+            box-shadow: 0 6px 18px rgba(44, 82, 130, 0.4);
+            transition: all 0.3s ease;
+            outline: none;
+            border: none;
+        }
+        #resetFormButton:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 10px 22px rgba(44, 82, 130, 0.6);
+            background: linear-gradient(90deg, #24436b, #3d64a7); /* Slightly darker on hover */
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Survey Form Section -->
+        <div id="surveyFormSection" class="relative">
+            <div class="form-header">
+                <h2>Address Details Survey</h2>
+                <p>Please provide your complete address details.</p>
+            </div>
+            <div class="form-body">
+                <form id="addressDetailsForm" class="space-y-8" method="POST">
+                    {% csrf_token %}
+                    <!-- Building Name & Room Number -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="form-group">
+                            <label for="buildingName">Building Name / House No.</label>
+                            <input type="text" id="buildingName" name="Building_Name" placeholder="e.g., Green Valley Apartments" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="roomNumber">Flat / Room Number</label>
+                            <input type="text" id="roomNumber" name="Room_Number" placeholder="e.g., A-101" required>
+                        </div>
+                    </div>
+
+                    <!-- Sector & City -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="form-group">
+                            <label for="sector">Sector / Locality</label>
+                            <input type="text" id="sector" name="Sector" placeholder="e.g., Sector 15" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="city">City</label>
+                            <input type="text" id="city" name="City" placeholder="e.g., New York" required>
+                        </div>
+                    </div>
+
+                    <!-- Landmark & Pincode -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="form-group">
+                            <label for="landmark">Landmark (Optional)</label>
+                            <input type="text" id="landmark" name="Land_Mark" placeholder="e.g., Near Central Park">
+                        </div>
+                        <div class="form-group">
+                            <label for="pincode">Pincode / Zip Code</label>
+                            <input type="text" id="pincode" name="Pincode" pattern="[0-9]{5,10}" placeholder="e.g., 12345 (5-10 digits)" title="Please enter a valid Pincode/Zip Code (5-10 digits)" required>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="flex justify-center pt-10">
+                        <button type="submit">
+                            Submit Address
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Thank You Message Section (hidden by default) -->
+        <div id="thankYouMessageSection" class="hidden text-center">
+            <svg class="mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <h2>Thank You!</h2>
+            <p>Your address details have been successfully submitted.</p>
+            <p>We appreciate you taking the time to provide this information.</p>
+            <button id="resetFormButton">
+                Submit Another Response
+            </button>
+        </div>
+    </div>
+
+</body>
+</html>

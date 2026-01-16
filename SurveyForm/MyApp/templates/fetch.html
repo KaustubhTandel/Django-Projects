@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        /* General Body Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Container for overall layout */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header Styling */
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-weight: 700;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 15px;
+        }
+
+        /* Section Styling */
+        .details-section {
+            margin-bottom: 30px;
+            padding: 25px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .details-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .details-section h2 {
+            color: #3498db;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-weight: 500;
+            cursor: pointer; /* To indicate it's clickable for collapsing */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .details-section h2 .toggle-icon {
+            font-size: 1.2em;
+            transition: transform 0.3s ease;
+        }
+
+        .details-section h2.collapsed .toggle-icon {
+            transform: rotate(-90deg);
+        }
+
+        /* Data Display Styling (for lists and tables) */
+        .details-content {
+            display: none; /* Hidden by default for collapsible sections */
+            padding-top: 10px;
+        }
+
+        .details-content ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .details-content ul li {
+            background-color: #ffffff;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            border-left: 5px solid #3498db;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .details-content ul li strong {
+            color: #2c3e50;
+            margin-right: 10px;
+        }
+
+        /* Table Styling for better structured data if needed */
+        .details-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .details-content th, .details-content td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .details-content th {
+            background-color: #3498db;
+            color: white;
+            font-weight: 500;
+        }
+
+        .details-content tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .details-content tr:hover {
+            background-color: #e9ecef;
+        }
+
+        /* Empty State Styling */
+        .empty-state {
+            text-align: center;
+            color: #7f8c8d;
+            padding: 20px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            font-style: italic;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                padding: 15px;
+            }
+
+            .details-content ul li {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .details-content ul li strong {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Comprehensive User Details</h1>
+
+        <div class="details-section">
+            <h2 onclick="toggleSection(this)">Personal Details <span class="toggle-icon">&#9660;</span></h2>
+            <div class="details-content">
+                {% if Personal_Details %}
+                    <ul>
+                        {% for detail in Personal_Details %}
+                            <li>
+                                <strong> First Name:</strong> {{detail.First_Name}} <br>
+                                <strong>Middle Name:</strong> {{detail.Middle_Name}} <br>
+                                <strong>Last Name:</strong> {{detail.Last_Name}} <br>
+                                <strong>Age:</strong> {{detail.Age}} <br>
+                                <strong>Gender:</strong> {{detail.Gender}} <br>
+                                <strong>Contact Number:</strong> {{detail.Contact_Number}} <br>
+                                <strong>EMail Address:</strong> {{detail.EMail_Address}}
+                                {# Add other personal details fields as needed #}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No personal details found.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="details-section">
+            <h2 onclick="toggleSection(this)">Favourite Details <span class="toggle-icon">&#9660;</span></h2>
+            <div class="details-content">
+                {% if Favourite_Details %}
+                    <ul>
+                        {% for detail in Favourite_Details %}
+                            <li>
+                                <strong>Favorite Singer:</strong> {{detail.Fav_Singer}} <br>
+                                <strong>Favorite Food:</strong> {{detail.Fav_Food}} <br>
+                                <strong>Favorite Teacher:</strong> {{detail.Fav_Teacher }} <br>
+                                <strong>Favorite Car:</strong> {{detail.Fav_Car}}
+                                {# Add other favourite details fields as needed #}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No favourite details found.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="details-section">
+            <h2 onclick="toggleSection(this)">Address Details <span class="toggle-icon">&#9660;</span></h2>
+            <div class="details-content">
+                {% if Address_Details %}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Building Name</th>
+                                <th>Room Number</th>
+                                <th>Sector</th>
+                                <th>City</th>
+                                <th>Land Mark</th>
+                                <th>Pincode</th>
+                                {# Add other address fields as needed #}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for detail in Address_Details %}
+                                <tr>
+                                    <td>{{detail.Building_Name}}</td>
+                                    <td>{{detail.Room_Number}}</td>
+                                    <td>{{detail.Sector}}</td>
+                                    <td>{{detail.City}}</td>
+                                    <td>{{detail.Land_Mark}}</td>
+                                    <td>{{detail.Pincode}}</td>
+                                    {# Add other address fields as needed #}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="empty-state">No address details found.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="details-section">
+            <h2 onclick="toggleSection(this)">Skills Details <span class="toggle-icon">&#9660;</span></h2>
+            <div class="details-content">
+                {% if Skills_Details %}
+                    <ul>
+                        {% for detail in Skills_Details %}
+                            <li>
+                                <strong>Tech Skill Name:</strong> {{detail.Tech_Skills}} <br>
+                                <strong>Tech Non Skill Name:</strong> {{detail.Non_Tech_Skills}} <br>
+                                <strong>Sports Skills Name:</strong> {{detail.Sports_Skills}}
+                                {# Add other skills details fields as needed #}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No skills details found.</p>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleSection(element) {
+            const content = element.nextElementSibling;
+            const icon = element.querySelector('.toggle-icon');
+
+            if (content.style.display === "block") {
+                content.style.display = "none";
+                element.classList.remove('expanded');
+                element.classList.add('collapsed');
+                icon.style.transform = 'rotate(-90deg)'; /* Point down when collapsed */
+            } else {
+                content.style.display = "block";
+                element.classList.remove('collapsed');
+                element.classList.add('expanded');
+                icon.style.transform = 'rotate(0deg)'; /* Point up when expanded */
+            }
+        }
+
+        // Initialize all sections to be collapsed by default, and expand the first one
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.details-section h2');
+            sections.forEach(function(sectionTitle, index) {
+                const content = sectionTitle.nextElementSibling;
+                const icon = sectionTitle.querySelector('.toggle-icon');
+
+                content.style.display = 'none'; // Ensure all are hidden initially
+                sectionTitle.classList.add('collapsed');
+                icon.style.transform = 'rotate(-90deg)'; // Ensure icon is pointing down
+
+                // Optionally, expand the first section on load
+                if (index === 0) {
+                    content.style.display = 'block';
+                    sectionTitle.classList.remove('collapsed');
+                    sectionTitle.classList.add('expanded');
+                    icon.style.transform = 'rotate(0deg)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

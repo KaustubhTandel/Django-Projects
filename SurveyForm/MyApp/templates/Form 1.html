@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Details Survey</title>
+    <!-- Tailwind CSS for modern and responsive styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Poppins (for headings) and Lato (for body text) -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles to enhance Tailwind defaults or add specific flair */
+        body {
+            font-family: 'Lato', sans-serif;
+            /* Light, serene gradient background */
+            background: linear-gradient(135deg, #eaf2f8 0%, #dbe8f0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2.5rem;
+            overflow: hidden;
+        }
+        /* Subtle background pattern for added sophistication (light mode adapted) */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 15% 85%, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0) 70%),
+                        radial-gradient(circle at 85% 15%, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0) 70%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: #ffffff; /* White background for the container */
+            border-radius: 28px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15); /* Lighter, diffused shadow for light mode */
+            overflow: hidden;
+            animation: fadeInSlideDown 0.9s ease-out forwards;
+        }
+
+        /* Keyframe for fade-in and slide-down effect */
+        @keyframes fadeInSlideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-header {
+            background: linear-gradient(90deg, #4c77c6, #6a96e6); /* Professional blue gradient for header */
+            color: white; /* Light text for header */
+            padding: 3.5rem 3rem;
+            border-top-left-radius: 28px;
+            border-top-right-radius: 28px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 -5px 10px rgba(0,0,0,0.1);
+        }
+        .form-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="10"/></svg>'); /* Subtle pattern (light mode adapted) */
+            background-size: 50px 50px;
+            opacity: 0.2;
+            z-index: 0;
+            animation: moveBackground 60s linear infinite;
+        }
+        @keyframes moveBackground {
+            from { background-position: 0 0; }
+            to { background-position: 100% 100%; }
+        }
+        .form-header h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3.2rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            text-shadow: 2px 3px 6px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+            letter-spacing: 0.02em;
+        }
+        .form-header p {
+            font-family: 'Lato', sans-serif;
+            font-size: 1.3rem;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+            line-height: 1.5;
+        }
+
+        .form-body {
+            padding: 3.5rem 3rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.8rem;
+        }
+        .form-group:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .form-group label {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            color: #3b4a62; /* Deeper, more sophisticated gray for labels */
+            margin-bottom: 0.7rem;
+            display: block;
+            font-size: 1rem;
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="email"],
+        input[type="tel"],
+        textarea,
+        select {
+            border: 1px solid #d4dbe8; /* Softer border color */
+            padding: 1.2rem 1.5rem;
+            border-radius: 14px;
+            width: 100%;
+            font-size: 1.1rem;
+            color: #2a3547; /* Darker, professional text in inputs */
+            background-color: #fcfdff; /* Very light background for inputs */
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); /* Subtle inner shadow */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+        }
+        input[type="text"]::placeholder,
+        input[type="number"]::placeholder,
+        input[type="email"]::placeholder,
+        input[type="tel"]::placeholder,
+        textarea::placeholder {
+            color: #92a0b8; /* Professional placeholder color */
+            opacity: 1;
+        }
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #4a90e2; /* Clear blue on focus */
+            background-color: #ffffff; /* Ensure white background on focus */
+            box-shadow: 0 0 0 6px rgba(74, 144, 226, 0.25); /* More prominent, soft glow */
+        }
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .radio-group label {
+            color: #4a5568; /* Darker text for radio labels */
+        }
+        .radio-group input[type="radio"] {
+            border: 2px solid #a0aec0; /* Lighter border for radio buttons */
+            background-color: #f7fafc; /* Very light background for radio buttons */
+        }
+        .radio-group input[type="radio"]:checked {
+            border-color: #4c77c6; /* Match header blue */
+            background-color: #4c77c6; /* Match header blue */
+        }
+
+        button[type="submit"] {
+            background: linear-gradient(90deg, #2f855a, #48bb78); /* Deep, vibrant green gradient for submit */
+            color: white;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            padding: 1.2rem 3.5rem;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            letter-spacing: 0.1em;
+            box-shadow: 0 10px 25px rgba(47, 133, 90, 0.4); /* Stronger, softer green shadow */
+            transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+            outline: none;
+            border: none;
+        }
+        button[type="submit"]:hover {
+            transform: translateY(-6px) scale(1.04);
+            box-shadow: 0 15px 35px rgba(47, 133, 90, 0.6);
+            background: linear-gradient(90deg, #276b4a, #3da168); /* Slightly darker on hover */
+        }
+        button[type="submit"]:active {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 12px rgba(47, 133, 90, 0.3);
+        }
+
+        /* Thank You Section Styling (light mode adapted) */
+        #thankYouMessageSection {
+            background-color: #ffffff; /* White background for thank you section */
+            padding: 5rem 3rem;
+            border-bottom-left-radius: 28px;
+            border-bottom-right-radius: 28px;
+            animation: fadeInSlideUp 1s ease-out forwards;
+        }
+        @keyframes fadeInSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #thankYouMessageSection svg {
+            color: #2f855a; /* Deep green for checkmark */
+            height: 7rem;
+            width: 7rem;
+            margin-bottom: 2.8rem;
+            animation: popIn 1s cubic-bezier(.17,.89,.32,1.49) forwards;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            80% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        #thankYouMessageSection h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #215c3d; /* Darker, richer green */
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.03em;
+        }
+        #thankYouMessageSection p {
+            font-family: 'Lato', sans-serif;
+            font-size: 1.35rem;
+            color: #586980; /* Softer gray for text */
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+        }
+        #resetFormButton {
+            background: linear-gradient(90deg, #4c77c6, #6a96e6); /* Match header blue gradient */
+            color: white;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            padding: 1rem 3rem;
+            border-radius: 40px;
+            font-size: 1.15rem;
+            box-shadow: 0 6px 18px rgba(76, 119, 198, 0.4);
+            transition: all 0.3s ease;
+            outline: none;
+            border: none;
+        }
+        #resetFormButton:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 10px 22px rgba(76, 119, 198, 0.6);
+            background: linear-gradient(90deg, #3d60a1, #567cc3); /* Slightly darker on hover */
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body >
+    <div class="container">
+        <!-- Survey Form Section -->
+        <div id="surveyFormSection" class="relative">
+            <div class="form-header">
+                <h2>Personal Details Survey</h2>
+                <p>Please provide your information below.</p>
+            </div>
+            <div class="form-body">
+                <form id="personalDetailsForm" class="space-y-8" method="POST">
+                    {% csrf_token %}
+                    <!-- Name Fields -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <input type="text" id="firstName" name="First_Name" placeholder="e.g., John" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="middleName">Middle Name (Optional)</label>
+                            <input type="text" id="middleName" name="Middle_Name" placeholder="e.g., Michael">
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" id="lastName" name="Last_Name" placeholder="e.g., Smith" required>
+                        </div>
+                    </div>
+
+                    <!-- Age and Gender -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="form-group">
+                            <label for="age">Age</label>
+                            <input type="number" id="age" name="Age" min="1" max="120" placeholder="e.g., 30" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="block mb-2">Gender</label>
+                            <div class="flex flex-wrap items-center space-x-6 h-full">
+                                <label class="inline-flex items-center radio-group">
+                                    <input type="radio" name="Gender" value="Male" required>
+                                    <span>Male</span>
+                                </label>
+                                <label class="inline-flex items-center radio-group">
+                                    <input type="radio" name="Gender" value="Female">
+                                    <span>Female</span>
+                                </label>
+                                <label class="inline-flex items-center radio-group">
+                                    <input type="radio" name="Gender" value="Other">
+                                    <span>Other</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Information -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="form-group">
+                            <label for="contactNumber">Contact Number</label>
+                            <input type="tel" id="contactNumber" name="Contact_Number" pattern="[0-9]{10}" placeholder="e.g., 1234567890 (10 digits)" title="Please enter a 10-digit number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="emailAddress">Email Address</label>
+                            <input type="email" id="emailAddress" name="Email_Address" placeholder="e.g., you@example.com" required>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="flex justify-center pt-10">
+                        <button type="submit">
+                            Submit Survey
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Thank You Message Section (hidden by default) -->
+        <div id="thankYouMessageSection" class="hidden text-center">
+            <svg class="mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <h2>Thank You!</h2>
+            <p>Your personal details have been successfully submitted.</p>
+            <p>We appreciate you taking the time to complete our survey.</p>
+            <button id="resetFormButton">
+                Submit Another Response
+            </button>
+        </div>
+    </div>
+
+</body>
+</html>
