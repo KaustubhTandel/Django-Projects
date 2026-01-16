@@ -1,0 +1,310 @@
+{% extends 'homepage/base.html' %}
+
+{% block title %}{{ product.name }} - ShopEasy{% endblock %}
+
+{% block content %}
+<style>
+    .breadcrumb {
+        margin-bottom: 2rem;
+        color: white;
+    }
+
+    .breadcrumb a {
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .breadcrumb a:hover {
+        color: white;
+    }
+
+    .product-detail {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        margin-bottom: 3rem;
+    }
+
+    .product-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        min-height: 500px;
+    }
+
+    .product-image-container {
+        background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .product-image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .product-image-container:hover img {
+        transform: scale(1.05);
+    }
+
+    .product-image-placeholder {
+        font-size: 8rem;
+        color: #adb5bd;
+    }
+
+    .product-details {
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .product-title {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        color: #333;
+    }
+
+    .product-price {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #667eea;
+        margin-bottom: 1rem;
+    }
+
+    .product-category {
+        display: inline-block;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+        text-decoration: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .product-category:hover {
+        transform: translateY(-2px);
+        color: white;
+        box-shadow: 0 4px 10px rgba(102, 126, 234, 0.4);
+    }
+
+    .product-description {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #555;
+        margin-bottom: 2rem;
+    }
+
+    .product-meta {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .stock-info {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 500;
+        font-size: 1rem;
+    }
+
+    .stock-icon {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .in-stock-icon {
+        background: #28a745;
+    }
+
+    .out-of-stock-icon {
+        background: #dc3545;
+    }
+    
+    .stock-info.in-stock { color: #155724; }
+    .stock-info.out-of-stock { color: #721c24; }
+
+
+    .product-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .related-products {
+        margin-top: 4rem;
+    }
+
+    .related-title {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .related-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .related-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .related-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .related-image {
+        width: 100%;
+        height: 180px;
+        background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        color: #999;
+    }
+
+    .related-info {
+        padding: 1rem;
+    }
+
+    .related-name {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        color: #333;
+        text-decoration: none;
+    }
+    
+    .related-name a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .related-price {
+        color: #667eea;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    @media (max-width: 992px) {
+        .product-layout {
+            grid-template-columns: 1fr;
+        }
+        .product-image-container {
+            height: 400px;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .product-details {
+            padding: 2rem;
+        }
+
+        .product-title {
+            font-size: 2rem;
+        }
+
+        .product-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .product-meta {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+    }
+</style>
+
+<nav class="breadcrumb">
+    <a href="{% url 'homepage:index' %}">Home</a> / 
+    <a href="{% url 'homepage:index' %}?category={{ product.category.id }}">{{ product.category.name }}</a> / 
+    <span>{{ product.name }}</span>
+</nav>
+
+<div class="product-detail fade-in">
+    <div class="product-layout">
+        <div class="product-image-container">
+            {% if product.image_url %}
+                <img src="{{ product.image_url }}" alt="{{ product.name }}">
+            {% else %}
+                <span class="product-image-placeholder">🖼️</span>
+            {% endif %}
+        </div>
+        <div class="product-details">
+            <h1 class="product-title">{{ product.name }}</h1>
+            <p class="product-price">${{ product.price|floatformat:2 }}</p>
+            <a href="{% url 'homepage:index' %}?category={{ product.category.id }}" class="product-category">
+                {{ product.category.name }}
+            </a>
+            <p class="product-description">{{ product.description }}</p>
+
+            <div class="product-meta">
+                <div class="stock-info {% if product.is_in_stock %}in-stock{% else %}out-of-stock{% endif %}">
+                    <span class="stock-icon {% if product.is_in_stock %}in-stock-icon{% else %}out-of-stock-icon{% endif %}"></span>
+                    {% if product.is_in_stock %}
+                        In Stock ({{ product.stock_quantity }} available)
+                    {% else %}
+                        Out of Stock
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="product-actions">
+                <a href="#" class="btn btn-primary">Add to Cart</a>
+                <a href="#" class="btn btn-outline">Add to Wishlist</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if related_products %}
+<section class="related-products">
+    <h2 class="related-title">You might also like</h2>
+    <div class="related-grid">
+        {% for related_product in related_products %}
+            <a href="{% url 'homepage:product_detail' related_product.id %}" style="text-decoration: none;">
+                <div class="related-card">
+                    <div class="related-image">
+                        {% if related_product.image_url %}
+                            <img src="{{ related_product.image_url }}" alt="{{ related_product.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        {% else %}
+                            🎁
+                        {% endif %}
+                    </div>
+                    <div class="related-info">
+                        <h4 class="related-name">{{ related_product.name }}</h4>
+                        <p class="related-price">${{ related_product.price|floatformat:2 }}</p>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}
